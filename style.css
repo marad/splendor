@@ -291,36 +291,6 @@ h1, h2, h3 {
     align-items: flex-start;
 }
 
-/* --- Game Header --- */
-#game-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    padding: 15px 30px;
-    background: var(--bg-secondary);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    transition: all 0.5s;
-}
-
-#turn-info {
-    font-family: 'Cinzel', serif;
-    font-size: 1.3rem;
-}
-
-#current-player-name {
-    color: var(--text-accent);
-    font-weight: 700;
-    transition: color 0.5s;
-}
-
-#action-info {
-    color: var(--text-secondary);
-    font-style: italic;
-    transition: color 0.3s, transform 0.3s;
-}
-
 .hidden {
     display: none !important;
 }

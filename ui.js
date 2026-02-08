@@ -59,10 +59,6 @@ class SplendorUI {
             this.startGame(numPlayers, mode === 'ai', difficulty);
         });
 
-        document.getElementById('cancel-action').addEventListener('click', () => {
-            this.cancelAction();
-        });
-
         document.getElementById('play-again').addEventListener('click', () => {
             document.getElementById('game-over-modal').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('active');
@@ -451,36 +447,7 @@ class SplendorUI {
         this.renderNobles();
         this.renderCards(initialDeal);
         this.renderPlayers();
-        this.renderHeader();
         this._snapshotPlayerStates();
-    }
-
-    renderHeader() {
-        const player = this.game.getCurrentPlayer();
-        document.getElementById('current-player-name').textContent = player.name;
-        document.getElementById('current-player-name').style.color =
-            this.getPlayerColor(player.id);
-
-        if (this.game.gameOver) {
-            document.getElementById('action-info').textContent = 'Koniec gry!';
-        } else if (this.aiThinking) {
-            document.getElementById('action-info').textContent = '🤖 AI myśli...';
-        } else if (this.isCurrentPlayerAI()) {
-            document.getElementById('action-info').textContent = '🤖 Tura AI';
-        } else if (this.actionMode === 'tokens') {
-            const remaining = this.getMaxTokensToPick() - this.selectedTokens.length;
-            document.getElementById('action-info').textContent =
-                `Wybierz żetony (jeszcze ${remaining}) lub potwierdź`;
-        } else {
-            document.getElementById('action-info').textContent = 'Wybierz akcję: weź żetony, kup kartę lub zarezerwuj';
-        }
-
-        const cancelBtn = document.getElementById('cancel-action');
-        if (this.actionMode && !this.isCurrentPlayerAI()) {
-            cancelBtn.classList.remove('hidden');
-        } else {
-            cancelBtn.classList.add('hidden');
-        }
     }
 
     getPlayerColor(idx) {
@@ -559,7 +526,6 @@ class SplendorUI {
             this.actionMode = null;
         }
         this.renderBank();
-        this.renderHeader();
     }
 
     renderNobles() {
@@ -854,7 +820,6 @@ class SplendorUI {
         }
 
         this.renderBank();
-        this.renderHeader();
     }
 
     confirmTakeTokens() {
