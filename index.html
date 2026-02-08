@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splendor - Klon gry planszowej</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💎</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Menu startowe -->
+        <div id="start-menu" class="screen active">
+            <div class="menu-container">
+                <h1 class="game-title">✦ SPLENDOR ✦</h1>
+                <p class="subtitle">Gra o klejnotach i prestiżu</p>
+                <div class="menu-options">
+                    <label>Tryb gry:</label>
+                    <div class="mode-select">
+                        <button class="mode-btn active" data-mode="pvp">👥 Gracz vs Gracz</button>
+                        <button class="mode-btn" data-mode="ai">🤖 Gracz vs AI</button>
+                    </div>
+                    
+                    <label>Liczba graczy:</label>
+                    <div class="player-select">
+                        <button class="player-btn active" data-players="2">2</button>
+                        <button class="player-btn" data-players="3">3</button>
+                        <button class="player-btn" data-players="4">4</button>
+                    </div>
+                    
+                    <div id="ai-options" class="ai-options hidden">
+                        <label>Poziom trudności AI:</label>
+                        <div class="difficulty-select">
+                            <button class="diff-btn" data-diff="easy">Łatwy</button>
+                            <button class="diff-btn active" data-diff="medium">Średni</button>
+                            <button class="diff-btn" data-diff="hard">Trudny</button>
+                        </div>
+                    </div>
+                    
+                    <button id="start-game" class="btn-primary">Rozpocznij grę</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ekran gry -->
+        <div id="game-screen" class="screen">
+            <!-- Pasek informacyjny -->
+            <div id="game-header">
+                <div id="turn-info">Tura gracza: <span id="current-player-name">Gracz 1</span></div>
+                <div id="action-info">Wybierz akcję</div>
+                <button id="cancel-action" class="btn-small hidden">Anuluj</button>
+            </div>
+
+            <!-- Główny obszar gry -->
+            <div id="game-board">
+                <!-- Szlachcice -->
+                <div id="nobles-area">
+                    <h3>Szlachcice</h3>
+                    <div id="nobles-row" class="card-row"></div>
+                </div>
+
+                <!-- Żetony banku -->
+                <div id="bank-area">
+                    <h3>Bank żetonów</h3>
+                    <div id="bank-tokens" class="token-row"></div>
+                </div>
+
+                <!-- Karty rozwoju -->
+                <div id="cards-area">
+                    <div class="card-tier" id="tier-3">
+                        <div class="deck-pile" data-tier="3">
+                            <span class="deck-count"></span>
+                            <span class="deck-dots">•••</span>
+                        </div>
+                        <div class="card-row" id="tier-3-cards"></div>
+                    </div>
+                    <div class="card-tier" id="tier-2">
+                        <div class="deck-pile" data-tier="2">
+                            <span class="deck-count"></span>
+                            <span class="deck-dots">••</span>
+                        </div>
+                        <div class="card-row" id="tier-2-cards"></div>
+                    </div>
+                    <div class="card-tier" id="tier-1">
+                        <div class="deck-pile" data-tier="1">
+                            <span class="deck-count"></span>
+                            <span class="deck-dots">•</span>
+                        </div>
+                        <div class="card-row" id="tier-1-cards"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel graczy -->
+            <div id="players-area">
+                <!-- Generowane dynamicznie -->
+            </div>
+
+            <!-- Modal zwrotu żetonów -->
+            <div id="return-tokens-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h3>Musisz zwrócić żetony (max 10)</h3>
+                    <p>Posiadasz <span id="token-count-display">0</span> żetonów. Zwróć <span id="tokens-to-return">0</span>.</p>
+                    <div id="return-token-options"></div>
+                    <button id="confirm-return" class="btn-primary" disabled>Potwierdź</button>
+                </div>
+            </div>
+
+            <!-- Modal końca gry -->
+            <div id="game-over-modal" class="modal hidden">
+                <div class="modal-content">
+                    <h2>🏆 Koniec gry!</h2>
+                    <p id="winner-text"></p>
+                    <button id="play-again" class="btn-primary">Zagraj ponownie</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="game.js"></script>
+    <script src="ai.js"></script>
+    <script src="ui.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
