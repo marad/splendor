@@ -278,8 +278,17 @@ h1, h2, h3 {
 #game-screen {
     flex-direction: column;
     min-height: 100vh;
-    padding: 10px;
-    gap: 10px;
+    padding: 20px;
+    gap: 20px;
+}
+
+#game-main {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    flex: 1;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 /* --- Game Header --- */
@@ -288,16 +297,16 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     gap: 30px;
-    padding: 10px 20px;
+    padding: 15px 30px;
     background: var(--bg-secondary);
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px solid var(--border-color);
     transition: all 0.5s;
 }
 
 #turn-info {
     font-family: 'Cinzel', serif;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
 }
 
 #current-player-name {
@@ -320,40 +329,60 @@ h1, h2, h3 {
 #game-board {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 20px;
     flex: 1;
 }
 
 /* --- Nobles --- */
-#nobles-area h3, #bank-area h3 {
-    font-size: 0.85rem;
+#nobles-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-width: 130px;
+}
+
+#nobles-area h3 {
+    font-size: 0.9rem;
     color: var(--text-secondary);
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 6px;
+    writing-mode: horizontal-tb;
 }
 
 #nobles-row {
     display: flex;
-    gap: 8px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#bank-area {
+    text-align: center;
+}
+
+#bank-area h3 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
 }
 
 .noble-tile {
-    width: 90px;
-    height: 90px;
-    border-radius: 10px;
+    width: 110px;
+    height: 110px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #4a1942, #2d1b69);
-    border: 2px solid #8e44ad;
+    border: 3px solid #8e44ad;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px;
+    padding: 10px;
     position: relative;
     cursor: default;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 2px 10px rgba(142, 68, 173, 0.3);
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
 }
 
 .noble-tile:hover {
@@ -374,24 +403,24 @@ h1, h2, h3 {
 
 .noble-points {
     font-family: 'Cinzel', serif;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     font-weight: 900;
     color: var(--text-accent);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .noble-requirements {
     display: flex;
-    gap: 3px;
+    gap: 4px;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .noble-req {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    padding: 1px 5px;
-    border-radius: 3px;
+    padding: 2px 7px;
+    border-radius: 4px;
     color: white;
 }
 
@@ -402,25 +431,25 @@ h1, h2, h3 {
 
 #bank-tokens {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 .bank-token {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 900;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 3px solid rgba(255,255,255,0.3);
+    border: 4px solid rgba(255,255,255,0.3);
     position: relative;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.2);
     user-select: none;
 }
 
@@ -477,38 +506,38 @@ h1, h2, h3 {
 .bank-token[data-color="gold"] { background: linear-gradient(135deg, #ffeaa7, #c5960c); color: #4a3010; border-color: rgba(255,255,255,0.5); }
 
 .token-gem-icon {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     position: absolute;
-    top: 3px;
+    top: 5px;
 }
 
 /* --- Card Tiers --- */
 #cards-area {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 12px;
 }
 
 .card-tier {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
     justify-content: center;
 }
 
 .deck-pile {
-    width: 100px;
-    height: 140px;
-    border-radius: 10px;
+    width: 150px;
+    height: 210px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 2px solid rgba(255,255,255,0.15);
+    border: 3px solid rgba(255,255,255,0.15);
     position: relative;
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.3), 6px 6px 0 rgba(0,0,0,0.15);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3), 8px 8px 0 rgba(0,0,0,0.15);
 }
 
 .deck-pile[data-tier="1"] { background: linear-gradient(135deg, #3d7a1e, var(--tier1-color)); }
@@ -522,33 +551,33 @@ h1, h2, h3 {
 
 .deck-count {
     font-family: 'Cinzel', serif;
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     font-weight: 900;
     color: rgba(255,255,255,0.8);
 }
 
 .deck-dots {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: rgba(255,255,255,0.4);
-    letter-spacing: 3px;
+    letter-spacing: 4px;
 }
 
 /* --- Development Cards --- */
 .card-row {
     display: flex;
-    gap: 8px;
+    gap: 12px;
 }
 
 .dev-card {
-    width: 100px;
-    height: 140px;
-    border-radius: 10px;
+    width: 150px;
+    height: 210px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
-    padding: 6px;
+    padding: 12px;
     cursor: pointer;
     transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 2px solid rgba(255,255,255,0.1);
+    border: 3px solid rgba(255,255,255,0.1);
     position: relative;
     overflow: hidden;
 }
@@ -643,23 +672,23 @@ h1, h2, h3 {
 
 .card-points {
     font-family: 'Cinzel', serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 900;
     color: var(--text-accent);
     text-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
-    min-width: 20px;
+    min-width: 24px;
 }
 
 .card-gem-bonus {
-    width: 26px;
-    height: 26px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.85rem;
+    font-size: 1rem;
     border: 2px solid rgba(255,255,255,0.4);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .card-gem-bonus[data-gem="white"] { background: linear-gradient(135deg, #ecf0f1, #bdc3c7); color: #555; }
@@ -671,26 +700,26 @@ h1, h2, h3 {
 .card-cost {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
     margin-top: auto;
 }
 
 .cost-item {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.75rem;
+    gap: 6px;
+    font-size: 0.9rem;
     font-weight: 700;
 }
 
 .cost-gem {
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     border: 1px solid rgba(255,255,255,0.3);
 }
 
@@ -761,16 +790,18 @@ h1, h2, h3 {
 /* --- Players Area --- */
 #players-area {
     display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding: 5px 0;
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px 0;
+    min-width: 280px;
+    max-width: 320px;
 }
 
 .player-panel {
-    flex: 1;
-    min-width: 200px;
-    padding: 10px 14px;
-    border-radius: 10px;
+    flex: none;
+    min-width: 260px;
+    padding: 16px 20px;
+    border-radius: 12px;
     background: var(--bg-secondary);
     border: 2px solid var(--border-color);
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -836,20 +867,20 @@ h1, h2, h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--border-color);
 }
 
 .player-name {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
 }
 
 .player-score {
     font-family: 'Cinzel', serif;
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     font-weight: 900;
     color: var(--text-accent);
     transition: transform 0.3s;
@@ -858,28 +889,28 @@ h1, h2, h3 {
 .player-resources {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 2px;
+    gap: 6px;
+    padding: 4px;
     transition: background 0.5s;
 }
 
 .player-resource-row {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
+    gap: 10px;
+    font-size: 1rem;
 }
 
 .player-gem-indicator {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.2);
     transition: transform 0.3s;
 }
 
@@ -891,44 +922,54 @@ h1, h2, h3 {
 .player-gem-indicator[data-gem="gold"] { background: var(--gem-gold); color: #4a3010; }
 
 .resource-tokens {
-    min-width: 16px;
+    min-width: 24px;
     text-align: center;
+    font-weight: 600;
     transition: all 0.3s;
 }
 
 .resource-bonuses {
-    min-width: 16px;
+    min-width: 24px;
     text-align: center;
     color: var(--text-accent);
+    font-weight: 600;
     transition: all 0.3s;
 }
 
 .player-reserved {
-    margin-top: 6px;
-    padding-top: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
     border-top: 1px solid var(--border-color);
 }
 
 .player-reserved-label {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .reserved-cards {
     display: flex;
-    gap: 4px;
+    gap: 6px;
+}
+
+.player-token-count {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
 }
 
 .reserved-mini-card {
-    width: 30px;
-    height: 42px;
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.2);
+    width: 38px;
+    height: 52px;
+    border-radius: 5px;
+    border: 2px solid rgba(255,255,255,0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -944,21 +985,21 @@ h1, h2, h3 {
 .reserved-mini-card[data-tier="3"] { background: var(--tier3-color); }
 
 .player-nobles {
-    margin-top: 4px;
+    margin-top: 6px;
     display: flex;
-    gap: 3px;
+    gap: 5px;
 }
 
 .player-noble-mini {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 5px;
     background: linear-gradient(135deg, #4a1942, #2d1b69);
-    border: 1px solid #8e44ad;
+    border: 2px solid #8e44ad;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     font-weight: 900;
     color: var(--text-accent);
 }
@@ -1280,13 +1321,50 @@ h1, h2, h3 {
 ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 
 /* --- Responsive --- */
+@media (max-width: 1400px) {
+    .dev-card { width: 130px; height: 180px; }
+    .deck-pile { width: 130px; height: 180px; }
+    .noble-tile { width: 100px; height: 100px; }
+}
+
+@media (max-width: 1200px) {
+    .dev-card { width: 110px; height: 154px; }
+    .deck-pile { width: 110px; height: 154px; }
+    .noble-tile { width: 90px; height: 90px; }
+    .bank-token { width: 60px; height: 60px; font-size: 1.3rem; }
+    #players-area { min-width: 240px; max-width: 280px; }
+    .player-panel { min-width: 220px; padding: 12px 16px; }
+}
+
+@media (max-width: 1000px) {
+    #game-main { flex-direction: column; align-items: center; }
+    #nobles-area {
+        flex-direction: row;
+        min-width: auto;
+    }
+    #nobles-area h3 {
+        writing-mode: horizontal-tb;
+    }
+    #nobles-row {
+        flex-direction: row;
+        gap: 12px;
+    }
+    #players-area {
+        flex-direction: row;
+        flex-wrap: wrap;
+        min-width: auto;
+        max-width: none;
+        justify-content: center;
+    }
+    .player-panel { min-width: 200px; flex: 1; max-width: 300px; }
+}
+
 @media (max-width: 900px) {
     .game-title { font-size: 2.5rem; letter-spacing: 6px; }
     .dev-card { width: 85px; height: 120px; }
     .deck-pile { width: 85px; height: 120px; }
     .noble-tile { width: 75px; height: 75px; }
     .bank-token { width: 48px; height: 48px; font-size: 1.1rem; }
-    #players-area { flex-wrap: wrap; }
     .player-panel { min-width: 160px; }
 }
 

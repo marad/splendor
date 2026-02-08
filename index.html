@@ -52,49 +52,45 @@
                 <button id="cancel-action" class="btn-small hidden">Anuluj</button>
             </div>
 
-            <!-- Główny obszar gry -->
-            <div id="game-board">
-                <!-- Szlachcice -->
+            <div id="game-main">
                 <div id="nobles-area">
                     <h3>Szlachcice</h3>
-                    <div id="nobles-row" class="card-row"></div>
+                    <div id="nobles-row"></div>
                 </div>
 
-                <!-- Żetony banku -->
-                <div id="bank-area">
-                    <h3>Bank żetonów</h3>
-                    <div id="bank-tokens" class="token-row"></div>
+                <div id="game-board">
+                    <div id="bank-area">
+                        <h3>Bank żetonów</h3>
+                        <div id="bank-tokens" class="token-row"></div>
+                    </div>
+
+                    <div id="cards-area">
+                        <div class="card-tier" id="tier-3">
+                            <div class="deck-pile" data-tier="3">
+                                <span class="deck-count"></span>
+                                <span class="deck-dots">•••</span>
+                            </div>
+                            <div class="card-row" id="tier-3-cards"></div>
+                        </div>
+                        <div class="card-tier" id="tier-2">
+                            <div class="deck-pile" data-tier="2">
+                                <span class="deck-count"></span>
+                                <span class="deck-dots">••</span>
+                            </div>
+                            <div class="card-row" id="tier-2-cards"></div>
+                        </div>
+                        <div class="card-tier" id="tier-1">
+                            <div class="deck-pile" data-tier="1">
+                                <span class="deck-count"></span>
+                                <span class="deck-dots">•</span>
+                            </div>
+                            <div class="card-row" id="tier-1-cards"></div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Karty rozwoju -->
-                <div id="cards-area">
-                    <div class="card-tier" id="tier-3">
-                        <div class="deck-pile" data-tier="3">
-                            <span class="deck-count"></span>
-                            <span class="deck-dots">•••</span>
-                        </div>
-                        <div class="card-row" id="tier-3-cards"></div>
-                    </div>
-                    <div class="card-tier" id="tier-2">
-                        <div class="deck-pile" data-tier="2">
-                            <span class="deck-count"></span>
-                            <span class="deck-dots">••</span>
-                        </div>
-                        <div class="card-row" id="tier-2-cards"></div>
-                    </div>
-                    <div class="card-tier" id="tier-1">
-                        <div class="deck-pile" data-tier="1">
-                            <span class="deck-count"></span>
-                            <span class="deck-dots">•</span>
-                        </div>
-                        <div class="card-row" id="tier-1-cards"></div>
-                    </div>
+                <div id="players-area">
                 </div>
-            </div>
-
-            <!-- Panel graczy -->
-            <div id="players-area">
-                <!-- Generowane dynamicznie -->
             </div>
 
             <!-- Modal zwrotu żetonów -->

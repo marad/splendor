@@ -760,7 +760,7 @@ class SplendorUI {
                     <span class="player-score">${player.points} pkt</span>
                 </div>
                 <div class="player-resources">${resourcesHtml}</div>
-                <div style="font-size:0.7rem;color:var(--text-secondary);margin-top:4px;">Żetony: ${totalTokens}/10</div>
+                <div class="player-token-count">Żetony: ${totalTokens}/10</div>
                 ${noblesHtml}
                 ${reservedHtml}
             `;
