@@ -771,11 +771,12 @@ h1, h2, h3 {
 #players-area {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto auto;
+    grid-template-rows: 1fr 1fr;
     gap: 16px;
     padding: 10px 0;
     min-width: 560px;
     max-width: 640px;
+    align-items: stretch;
 }
 
 /* 2 players: single column */
