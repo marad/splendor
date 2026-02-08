@@ -7,9 +7,9 @@ const ALL_COLORS = [...GEM_COLORS, 'gold'];
 
 const GEM_SYMBOLS = {
     white: '💎',
-    blue: '🔷',
+    blue: '💧',
     green: '🟢',
-    red: '🔴',
+    red: '♦️',
     black: '⬛',
     gold: '⭐'
 };
