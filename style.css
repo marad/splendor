@@ -872,9 +872,9 @@ h1, h2, h3 {
 }
 
 .player-gem-indicator {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     line-height: 1;
-    min-width: 28px;
+    min-width: 32px;
     transition: transform 0.3s;
 }
 
