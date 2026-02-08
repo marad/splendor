@@ -402,6 +402,8 @@ h1, h2, h3 {
 /* --- Bank Tokens --- */
 #bank-area {
     text-align: center;
+    position: relative;
+    padding-bottom: 50px;
 }
 
 #bank-tokens {
@@ -1050,21 +1052,25 @@ h1, h2, h3 {
 
 /* --- Token selection info --- */
 #token-selection-bar {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 8px;
+    padding: 8px 16px;
     background: rgba(244, 208, 63, 0.1);
     border: 1px solid var(--text-accent);
     border-radius: 8px;
-    margin-top: -4px;
-    animation: barSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: barFadeIn 0.3s ease-out;
+    white-space: nowrap;
 }
 
-@keyframes barSlideIn {
-    from { opacity: 0; transform: translateY(-10px) scaleY(0.5); }
-    to { opacity: 1; transform: translateY(0) scaleY(1); }
+@keyframes barFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .selected-token-display {
