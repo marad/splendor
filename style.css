@@ -484,7 +484,6 @@ h1, h2, h3 {
     gap: clamp(8px, 1.5vh, 12px);
     flex: 1;
     min-height: 0;
-    justify-content: center;
 }
 
 .card-tier {
@@ -492,11 +491,14 @@ h1, h2, h3 {
     gap: clamp(8px, 1vw, 12px);
     align-items: center;
     justify-content: center;
+    flex: 1;
+    min-height: 0;
+    max-height: 33%;
 }
 
 .deck-pile {
-    width: clamp(100px, 15vh, 150px);
-    height: clamp(140px, 22vh, 210px);
+    aspect-ratio: 5 / 7;
+    height: 100%;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -536,11 +538,12 @@ h1, h2, h3 {
 .card-row {
     display: flex;
     gap: clamp(8px, 1vw, 12px);
+    height: 100%;
 }
 
 .dev-card {
-    width: clamp(100px, 15vh, 150px);
-    height: clamp(140px, 22vh, 210px);
+    aspect-ratio: 5 / 7;
+    height: 100%;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
