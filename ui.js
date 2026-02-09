@@ -678,8 +678,7 @@ class SplendorUI {
                 resourcesHtml += `
                     <div class="player-resource-row">
                         <div class="player-gem-indicator" data-gem="${color}">${GEM_SYMBOLS[color]}</div>
-                        <span class="resource-tokens">${tokens}</span>
-                        <span class="resource-bonuses">+${bonuses}</span>
+                        <span class="resource-counts">${tokens}<span class="resource-bonuses">+${bonuses}</span></span>
                     </div>`;
             });
 
@@ -687,8 +686,7 @@ class SplendorUI {
                 resourcesHtml += `
                     <div class="player-resource-row">
                         <div class="player-gem-indicator" data-gem="gold">${GEM_SYMBOLS.gold}</div>
-                        <span class="resource-tokens">${player.tokens.gold}</span>
-                        <span class="resource-bonuses"></span>
+                        <span class="resource-counts">${player.tokens.gold}</span>
                     </div>`;
             }
 

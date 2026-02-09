@@ -863,23 +863,25 @@ h1, h2, h3 {
 
 .player-resources {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 4px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 4px 0;
     transition: background 0.5s;
 }
 
 .player-resource-row {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
-    font-size: 1rem;
+    gap: 2px;
+    font-size: 0.85rem;
+    min-width: 36px;
 }
 
 .player-gem-indicator {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     line-height: 1;
-    min-width: 32px;
     transition: transform 0.3s;
 }
 
@@ -890,19 +892,17 @@ h1, h2, h3 {
 .player-gem-indicator[data-gem="black"] { }
 .player-gem-indicator[data-gem="gold"] { }
 
-.resource-tokens {
-    min-width: 24px;
+.resource-counts {
+    font-weight: 700;
     text-align: center;
-    font-weight: 600;
-    transition: all 0.3s;
+    font-size: 0.9rem;
 }
 
 .resource-bonuses {
-    min-width: 24px;
-    text-align: center;
     color: var(--text-accent);
     font-weight: 600;
-    transition: all 0.3s;
+    font-size: 0.8rem;
+    margin-left: 2px;
 }
 
 .player-reserved {
@@ -1518,22 +1518,25 @@ h1, h2, h3 {
     }
 
     .player-resources {
-        gap: 4px;
+        gap: 6px;
+        justify-content: center;
     }
 
     .player-resource-row {
-        gap: 6px;
-        font-size: 0.85rem;
+        gap: 2px;
+        min-width: 32px;
     }
 
     .player-gem-indicator {
         font-size: 1.1rem;
-        min-width: 24px;
     }
 
-    .resource-tokens, .resource-bonuses {
-        min-width: 20px;
-        font-size: 0.85rem;
+    .resource-counts {
+        font-size: 0.8rem;
+    }
+
+    .resource-bonuses {
+        font-size: 0.7rem;
     }
 
     .player-token-count {
