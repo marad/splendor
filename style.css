@@ -7,6 +7,11 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    touch-action: manipulation;
 }
 
 :root {
@@ -1330,6 +1335,364 @@ h1, h2, h3 {
 @media (max-height: 700px) {
     #game-screen { padding: 10px; gap: 10px; }
     #bank-area h3 { margin-bottom: 5px; font-size: 0.85rem; }
+}
+
+/* ============================================
+   MOBILE STYLES
+   ============================================ */
+@media (max-width: 768px) {
+    /* Game screen - enable scrolling */
+    #game-screen {
+        height: auto;
+        min-height: 100vh;
+        padding: 10px;
+        gap: 12px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #game-main {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    /* Game board */
+    #game-board {
+        gap: 10px;
+    }
+
+    /* Bank area */
+    #bank-area {
+        padding-bottom: 45px;
+    }
+
+    #bank-area h3 {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+
+    #bank-tokens {
+        gap: 8px;
+    }
+
+    .bank-token {
+        width: 48px;
+        height: 48px;
+        padding: 4px;
+    }
+
+    .token-gem-icon {
+        font-size: 1.4rem;
+    }
+
+    #token-selection-bar {
+        padding: 6px 12px;
+        gap: 8px;
+    }
+
+    /* Nobles area */
+    #nobles-area {
+        flex-direction: row;
+        min-width: auto;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #nobles-area h3 {
+        width: 100%;
+        text-align: center;
+        writing-mode: horizontal-tb;
+        font-size: 0.8rem;
+    }
+
+    #nobles-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .noble-tile {
+        width: 60px;
+        height: 60px;
+        padding: 4px;
+    }
+
+    .noble-points {
+        font-size: 1rem;
+    }
+
+    .noble-req {
+        font-size: 0.6rem;
+        padding: 1px 4px;
+    }
+
+    /* Cards area */
+    #cards-area {
+        gap: 8px;
+    }
+
+    .card-tier {
+        gap: 6px;
+    }
+
+    .dev-card, .deck-pile {
+        border-radius: 8px;
+        border-width: 2px;
+    }
+
+    .dev-card {
+        padding: 6px;
+    }
+
+    .card-points {
+        font-size: 1.1rem;
+        min-width: 18px;
+    }
+
+    .card-gem-bonus {
+        font-size: 1rem;
+    }
+
+    .card-cost {
+        gap: 2px;
+    }
+
+    .cost-item {
+        font-size: 0.85rem;
+        gap: 4px;
+    }
+
+    .cost-gem {
+        font-size: 0.9rem;
+    }
+
+    .deck-count {
+        font-size: 1.2rem;
+    }
+
+    .deck-dots {
+        font-size: 1rem;
+    }
+
+    /* Card actions popup */
+    .card-action-btn {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+
+    /* Players area */
+    #players-area {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        min-width: auto;
+        max-width: none;
+        padding: 5px 0;
+    }
+
+    #players-area:has(.player-panel:nth-child(2):last-child) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .player-panel {
+        min-width: auto;
+        padding: 10px 12px;
+        border-radius: 8px;
+    }
+
+    .player-panel.active {
+        transform: none;
+    }
+
+    .player-header {
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+    }
+
+    .player-name {
+        font-size: 0.9rem;
+    }
+
+    .player-score {
+        font-size: 1.2rem;
+    }
+
+    .player-resources {
+        gap: 4px;
+    }
+
+    .player-resource-row {
+        gap: 6px;
+        font-size: 0.85rem;
+    }
+
+    .player-gem-indicator {
+        font-size: 1.1rem;
+        min-width: 24px;
+    }
+
+    .resource-tokens, .resource-bonuses {
+        min-width: 20px;
+        font-size: 0.85rem;
+    }
+
+    .player-token-count {
+        font-size: 0.75rem;
+        margin-top: 6px;
+        padding-top: 6px;
+    }
+
+    .player-reserved {
+        margin-top: 6px;
+        padding-top: 6px;
+    }
+
+    .player-reserved-label {
+        font-size: 0.75rem;
+    }
+
+    .reserved-mini-card {
+        width: 32px;
+        height: 44px;
+        font-size: 0.65rem;
+    }
+
+    .player-noble-mini {
+        width: 26px;
+        height: 26px;
+        font-size: 0.7rem;
+    }
+
+    /* Start menu */
+    .menu-container {
+        padding: 30px 20px;
+        margin: 10px;
+        max-width: calc(100vw - 20px);
+    }
+
+    .game-title {
+        font-size: 2rem;
+        letter-spacing: 4px;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 25px;
+    }
+
+    .menu-options {
+        gap: 15px;
+    }
+
+    .player-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+    }
+
+    .mode-btn {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
+    .diff-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    .btn-primary {
+        padding: 12px 30px;
+        font-size: 1rem;
+    }
+
+    /* Modals */
+    .modal-content {
+        margin: 15px;
+        padding: 20px;
+        max-width: calc(100vw - 30px);
+    }
+
+    .modal-content h2 {
+        font-size: 1.4rem;
+    }
+
+    .modal-content h3 {
+        font-size: 1.1rem;
+    }
+
+    .return-token-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 0.9rem;
+    }
+
+    /* Toast */
+    #toast-container {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        transform: none;
+    }
+
+    .toast {
+        font-size: 0.8rem;
+        padding: 8px 16px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    #game-screen {
+        padding: 6px;
+    }
+
+    .bank-token {
+        width: 42px;
+        height: 42px;
+    }
+
+    .token-gem-icon {
+        font-size: 1.2rem;
+    }
+
+    .noble-tile {
+        width: 52px;
+        height: 52px;
+    }
+
+    .noble-points {
+        font-size: 0.9rem;
+    }
+
+    #players-area {
+        gap: 6px;
+    }
+
+    .player-panel {
+        padding: 8px 10px;
+    }
+
+    .player-name {
+        font-size: 0.8rem;
+    }
+
+    .player-score {
+        font-size: 1.1rem;
+    }
+
+    .player-gem-indicator {
+        font-size: 1rem;
+    }
+
+    .game-title {
+        font-size: 1.6rem;
+        letter-spacing: 2px;
+    }
+
+    .subtitle {
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
 }
 
 /* --- Reserved card tooltip on hover --- */
