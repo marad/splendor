@@ -1523,7 +1523,7 @@ h1, h2, h3 {
 
     /* Players area */
     #players-area {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         gap: 6px;
         min-width: auto;
         max-width: none;
@@ -1532,11 +1532,12 @@ h1, h2, h3 {
     }
 
     #players-area:has(.player-panel:nth-child(2):last-child) {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
     }
 
     .player-panel {
         min-width: auto;
+        width: 100%;
         padding: 8px 10px;
         border-radius: 8px;
     }
