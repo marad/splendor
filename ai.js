@@ -3,46 +3,101 @@
 // ============================================
 
 class SplendorAI {
-    constructor(game, playerIndex) {
+    constructor(game, playerIndex, difficulty = 'medium') {
         this.game = game;
         this.playerIndex = playerIndex;
+        this.difficulty = difficulty;
+        
+        // Wagi zależne od trudności
+        this.weights = this.getWeightsForDifficulty(difficulty);
+    }
+
+    // Wagi dla różnych poziomów trudności
+    getWeightsForDifficulty(difficulty) {
+        const configs = {
+            easy: {
+                points: 10,
+                nobleProgress: 4,
+                futureValue: 2,
+                costPenalty: 0.3,
+                pointsBonus: 5,
+                blockingBonus: 0,
+                randomness: 0.3,  // 30% szans na suboptymalne ruchy
+                lookAhead: false,
+                reserveThreshold: 30
+            },
+            medium: {
+                points: 15,
+                nobleProgress: 8,
+                futureValue: 3,
+                costPenalty: 0.5,
+                pointsBonus: 10,
+                blockingBonus: 5,
+                randomness: 0.1,  // 10% szans na suboptymalne ruchy
+                lookAhead: false,
+                reserveThreshold: 20
+            },
+            hard: {
+                points: 20,
+                nobleProgress: 12,
+                futureValue: 5,
+                costPenalty: 0.7,
+                pointsBonus: 15,
+                blockingBonus: 15,
+                randomness: 0,
+                lookAhead: true,
+                reserveThreshold: 15
+            }
+        };
+        return configs[difficulty] || configs.medium;
     }
 
     // Główna metoda - wybiera najlepszą akcję
     chooseAction() {
         const player = this.game.players[this.playerIndex];
+        const w = this.weights;
         
-        // Priorytet 1: Kup kartę dającą punkty, którą stać
         const winningMove = this.findWinningCard(player);
         if (winningMove) {
             return winningMove;
         }
 
-        // Priorytet 2: Kup kartę z planszy (najlepsza wartość)
+        // Hard: Blokuj przeciwnika bliskiego wygranej
+        if (w.blockingBonus > 0) {
+            const blockingMove = this.findBlockingMove(player);
+            if (blockingMove) {
+                return blockingMove;
+            }
+        }
+
+        // Hard: Patrzenie w przyszłość - wybierz najlepszą akcję ze wszystkich możliwych
+        if (w.lookAhead) {
+            const bestMove = this.findBestMoveWithLookAhead(player);
+            if (bestMove) {
+                return bestMove;
+            }
+        }
+
         const bestBuyFromBoard = this.findBestCardToBuy(player, false);
         if (bestBuyFromBoard && bestBuyFromBoard.score > 0) {
             return { action: 'buy', card: bestBuyFromBoard.card, fromReserved: false };
         }
 
-        // Priorytet 3: Kup zarezerwowaną kartę
         const bestBuyFromReserved = this.findBestCardToBuy(player, true);
         if (bestBuyFromReserved && bestBuyFromReserved.score > 0) {
             return { action: 'buy', card: bestBuyFromReserved.card, fromReserved: true };
         }
 
-        // Priorytet 4: Zarezerwuj wartościową kartę, której prawie stać
         const reserveMove = this.considerReserve(player);
         if (reserveMove) {
             return reserveMove;
         }
 
-        // Priorytet 5: Weź żetony (najlepszy wybór)
         const tokenMove = this.chooseBestTokens(player);
         if (tokenMove) {
             return tokenMove;
         }
 
-        // Fallback: Zarezerwuj najlepszą kartę jeśli można
         if (this.game.canReserve(player)) {
             const cardToReserve = this.findBestCardToReserve(player);
             if (cardToReserve) {
@@ -50,8 +105,211 @@ class SplendorAI {
             }
         }
 
-        // Ostateczność: Weź jakiekolwiek żetony
         return this.takeAnyTokens();
+    }
+
+    // Znajdź ruch blokujący przeciwnika bliskiego wygranej
+    findBlockingMove(player) {
+        const dominated = this.findDominatingOpponent();
+        if (!dominated) return null;
+
+        const dominated_player = dominated.player;
+        const dominated_cards = this.findCardsOpponentCanAlmostAfford(dominated_player);
+        
+        // Zarezerwuj kartę, którą przeciwnik chce kupić
+        if (this.game.canReserve(player) && dominated_cards.length > 0) {
+            const cardToBlock = dominated_cards[0];
+            if (!player.reserved.includes(cardToBlock)) {
+                return { action: 'reserve', card: cardToBlock, fromDeck: false };
+            }
+        }
+
+        return null;
+    }
+
+    // Znajdź przeciwnika dominującego (blisko wygranej)
+    findDominatingOpponent() {
+        let dominated = null;
+        let maxThreat = 0;
+
+        for (let i = 0; i < this.game.players.length; i++) {
+            if (i === this.playerIndex) continue;
+            
+            const opponent = this.game.players[i];
+            const threat = opponent.points + this.countPotentialPoints(opponent);
+            
+            if (opponent.points >= 10 && threat > maxThreat) {
+                maxThreat = threat;
+                dominated = { player: opponent, index: i, threat };
+            }
+        }
+
+        return dominated;
+    }
+
+    // Policz potencjalne punkty (karty które przeciwnik może kupić)
+    countPotentialPoints(opponent) {
+        let potential = 0;
+        const cards = this.getBoardCards();
+        
+        for (const card of cards) {
+            const cost = this.getEffectiveCostFor(opponent, card);
+            const totalMissing = Object.values(cost).reduce((a, b) => a + Math.max(0, b), 0);
+            
+            if (totalMissing <= 3) {
+                potential += card.points;
+            }
+        }
+        
+        return potential;
+    }
+
+    // Oblicz efektywny koszt karty dla gracza
+    getEffectiveCostFor(player, card) {
+        const cost = {};
+        GEM_COLORS.forEach(color => {
+            const required = card.cost[color] || 0;
+            const bonus = player.bonuses[color] || 0;
+            const tokens = player.tokens[color] || 0;
+            cost[color] = required - bonus - tokens;
+        });
+        return cost;
+    }
+
+    // Znajdź karty które przeciwnik prawie może kupić
+    findCardsOpponentCanAlmostAfford(opponent) {
+        const cards = this.getBoardCards();
+        const almostAffordable = [];
+
+        for (const card of cards) {
+            if (card.points < 2) continue;
+            
+            const cost = this.getEffectiveCostFor(opponent, card);
+            const totalMissing = Object.values(cost).reduce((a, b) => a + Math.max(0, b), 0);
+            
+            if (totalMissing <= 2) {
+                almostAffordable.push({ card, missing: totalMissing });
+            }
+        }
+
+        almostAffordable.sort((a, b) => {
+            const pointsDiff = b.card.points - a.card.points;
+            if (pointsDiff !== 0) return pointsDiff;
+            return a.missing - b.missing;
+        });
+
+        return almostAffordable.map(x => x.card);
+    }
+
+    // Patrzenie w przyszłość - ocena wszystkich możliwych ruchów
+    findBestMoveWithLookAhead(player) {
+        const moves = this.getAllPossibleMoves(player);
+        if (moves.length === 0) return null;
+
+        let bestMove = null;
+        let bestScore = -Infinity;
+
+        for (const move of moves) {
+            const score = this.evaluateMoveWithLookAhead(player, move);
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = move;
+            }
+        }
+
+        return bestMove;
+    }
+
+    // Wszystkie możliwe ruchy gracza
+    getAllPossibleMoves(player) {
+        const moves = [];
+
+        // Zakup kart z planszy
+        for (const card of this.getBoardCards()) {
+            if (this.game.canAfford(player, card)) {
+                moves.push({ action: 'buy', card, fromReserved: false });
+            }
+        }
+
+        // Zakup zarezerwowanych
+        for (const card of player.reserved) {
+            if (this.game.canAfford(player, card)) {
+                moves.push({ action: 'buy', card, fromReserved: true });
+            }
+        }
+
+        // Rezerwacja
+        if (this.game.canReserve(player)) {
+            for (const card of this.getBoardCards()) {
+                moves.push({ action: 'reserve', card, fromDeck: false });
+            }
+        }
+
+        // Żetony - 3 różne
+        const available = GEM_COLORS.filter(c => this.game.bank[c] > 0);
+        if (available.length >= 3) {
+            for (let i = 0; i < available.length - 2; i++) {
+                for (let j = i + 1; j < available.length - 1; j++) {
+                    for (let k = j + 1; k < available.length; k++) {
+                        const colors = [available[i], available[j], available[k]];
+                        if (this.game.canTakeTokens(colors)) {
+                            moves.push({ action: 'tokens', colors });
+                        }
+                    }
+                }
+            }
+        }
+
+        // Żetony - 2 takie same
+        for (const color of available) {
+            if (this.game.bank[color] >= 4) {
+                const colors = [color, color];
+                if (this.game.canTakeTokens(colors)) {
+                    moves.push({ action: 'tokens', colors });
+                }
+            }
+        }
+
+        return moves;
+    }
+
+    // Ocena ruchu z patrzeniem w przód
+    evaluateMoveWithLookAhead(player, move) {
+        let score = 0;
+        const w = this.weights;
+
+        if (move.action === 'buy') {
+            score += this.evaluateCard(player, move.card);
+            score += move.card.points * 5;
+            
+            // Sprawdź czy po zakupie możemy zdobyć szlachcica
+            const newBonuses = { ...player.bonuses };
+            newBonuses[move.card.gem] = (newBonuses[move.card.gem] || 0) + 1;
+            for (const noble of this.game.nobles) {
+                if (this.canClaimNobleWith(newBonuses, noble)) {
+                    score += 30;
+                }
+            }
+        } else if (move.action === 'reserve') {
+            score += this.evaluateCard(player, move.card) * 0.4;
+            score += 5; // bonus za złoty żeton
+        } else if (move.action === 'tokens') {
+            for (const color of move.colors) {
+                score += this.evaluateColorNeed(player, color) * 0.5;
+            }
+        }
+
+        return score;
+    }
+
+    // Sprawdź czy z danymi bonusami można zdobyć szlachcica
+    canClaimNobleWith(bonuses, noble) {
+        for (const color of GEM_COLORS) {
+            const required = noble.requirements[color] || 0;
+            const has = bonuses[color] || 0;
+            if (has < required) return false;
+        }
+        return true;
     }
 
     // Znajdź kartę, która da wygraną (15+ punktów)
@@ -121,25 +379,26 @@ class SplendorAI {
     // Oceń wartość karty
     evaluateCard(player, card) {
         let score = 0;
+        const w = this.weights;
 
-        // Punkty prestiżu są bardzo ważne
-        score += card.points * 15;
+        score += card.points * w.points;
 
-        // Bonus, który przybliża do szlachcica
         const nobleProgress = this.evaluateNobleProgress(player, card.gem);
-        score += nobleProgress * 8;
+        score += nobleProgress * w.nobleProgress;
 
-        // Bonus przydatny do innych kart na planszy
         const futureValue = this.evaluateFutureValue(player, card.gem);
-        score += futureValue * 3;
+        score += futureValue * w.futureValue;
 
-        // Preferuj tańsze karty (efektywność)
         const totalCost = Object.values(card.cost).reduce((a, b) => a + b, 0);
-        score -= totalCost * 0.5;
+        score -= totalCost * w.costPenalty;
 
-        // Bonus za karty dające punkty
         if (card.points > 0) {
-            score += 10;
+            score += w.pointsBonus;
+        }
+
+        // Dodaj losowość dla łatwiejszych poziomów
+        if (w.randomness > 0) {
+            score *= (1 - w.randomness + Math.random() * w.randomness * 2);
         }
 
         return score;
@@ -217,7 +476,7 @@ class SplendorAI {
         }
 
         // Rezerwuj tylko jeśli karta jest naprawdę warta
-        if (bestCard && bestScore > 20) {
+        if (bestCard && bestScore > this.weights.reserveThreshold) {
             return { action: 'reserve', card: bestCard, fromDeck: false };
         }
 

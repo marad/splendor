@@ -984,7 +984,7 @@ h1, h2, h3 {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 300;
     animation: modalBgIn 0.3s ease-out forwards;
 }
 

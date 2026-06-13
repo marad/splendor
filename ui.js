@@ -75,6 +75,7 @@ class SplendorUI {
         this.selectedTokens = [];
         this.actionMode = null;
         this._prevPlayerStates = null;
+        this._gameOverShown = false;
         
         this.aiMode = aiMode;
         this.aiDifficulty = difficulty;
@@ -83,7 +84,7 @@ class SplendorUI {
 
         if (aiMode) {
             for (let i = 1; i < numPlayers; i++) {
-                this.aiPlayers.push(new SplendorAI(this.game, i));
+                this.aiPlayers.push(new SplendorAI(this.game, i, difficulty));
                 this.game.players[i].name = `AI ${i}`;
                 this.game.players[i].isAI = true;
             }
@@ -92,6 +93,7 @@ class SplendorUI {
 
         document.getElementById('start-menu').classList.remove('active');
         document.getElementById('game-screen').classList.add('active');
+        document.getElementById('game-over-modal').classList.add('hidden');
 
         this._snapshotPlayerStates();
         this.render(true);
@@ -1101,7 +1103,8 @@ class SplendorUI {
     }
 
     checkGameOver() {
-        if (this.game.gameOver && this.game.winner) {
+        if (this.game.gameOver && this.game.winner && !this._gameOverShown) {
+            this._gameOverShown = true;
             setTimeout(() => {
                 this.spawnConfetti(40);
                 document.getElementById('winner-text').textContent =
