@@ -19,9 +19,24 @@ class SplendorUI {
         this.aiThinking = false;
     }
 
+    // Makes a non-button element behave like a button for keyboard users:
+    // Enter / Space trigger the same click handler. Use addEventListener for
+    // elements recreated each render; the listener dies with the old element.
+    _enableKeyActivation(el) {
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                el.click();
+            }
+        });
+    }
+
     init() {
         const toastContainer = document.createElement('div');
         toastContainer.id = 'toast-container';
+        toastContainer.setAttribute('role', 'status');
+        toastContainer.setAttribute('aria-live', 'polite');
+        toastContainer.setAttribute('aria-atomic', 'false');
         document.body.appendChild(toastContainer);
 
         document.querySelectorAll('.player-btn').forEach(btn => {
@@ -475,12 +490,26 @@ class SplendorUI {
             if (isDisabled && !isSelected) token.classList.add('disabled');
 
             token.innerHTML = `
-                <span class="token-gem-icon">${GEM_SYMBOLS[color]}</span>
+                <span class="token-gem-icon" aria-hidden="true">${GEM_SYMBOLS[color]}</span>
                 ${count}
             `;
 
-            if (color !== 'gold') {
+            // Accessibility
+            token.setAttribute('role', 'button');
+            token.setAttribute('aria-label', `${GEM_NAMES[color]}, w banku ${count}`);
+
+            if (color === 'gold') {
+                token.setAttribute('aria-disabled', 'true');
+            } else {
                 token.addEventListener('click', () => this.onBankTokenClick(color));
+                this._enableKeyActivation(token);
+                token.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+                if (isDisabled) {
+                    token.setAttribute('aria-disabled', 'true');
+                    token.tabIndex = -1;
+                } else {
+                    token.tabIndex = 0;
+                }
             }
 
             container.appendChild(token);
@@ -540,13 +569,19 @@ class SplendorUI {
             tile.id = `noble-${noble.id}`;
 
             let reqsHtml = '';
+            const reqParts = [];
             Object.entries(noble.requirements).forEach(([color, count]) => {
                 reqsHtml += `<span class="noble-req" style="background:${this.getGemCSSColor(color)}">${count}</span>`;
+                reqParts.push(`${count} ${GEM_NAMES[color]}`);
             });
 
+            tile.setAttribute('role', 'img');
+            tile.setAttribute('aria-label',
+                `Szlachcic, ${noble.points} punktów, wymaga: ${reqParts.join(', ')}`);
+
             tile.innerHTML = `
-                <div class="noble-points">${noble.points}</div>
-                <div class="noble-requirements">${reqsHtml}</div>
+                <div class="noble-points" aria-hidden="true">${noble.points}</div>
+                <div class="noble-requirements" aria-hidden="true">${reqsHtml}</div>
             `;
 
             container.appendChild(tile);
@@ -556,13 +591,33 @@ class SplendorUI {
     renderCards(initialDeal = false) {
         for (let tier = 3; tier >= 1; tier--) {
             const deckEl = document.querySelector(`.deck-pile[data-tier="${tier}"]`);
-            deckEl.querySelector('.deck-count').textContent = this.game.decks[tier].length;
+            const deckCount = this.game.decks[tier].length;
+            deckEl.querySelector('.deck-count').textContent = deckCount;
 
             deckEl.onclick = () => {
                 if (this.game.decks[tier].length > 0) this.onDeckClick(tier);
             };
-            deckEl.style.opacity = this.game.decks[tier].length > 0 ? '1' : '0.3';
-            deckEl.style.cursor = this.game.decks[tier].length > 0 ? 'pointer' : 'default';
+            deckEl.style.opacity = deckCount > 0 ? '1' : '0.3';
+            deckEl.style.cursor = deckCount > 0 ? 'pointer' : 'default';
+
+            // Accessibility (deck-pile elements are reused, so use property
+            // assignment for the key handler to avoid stacking listeners)
+            deckEl.setAttribute('role', 'button');
+            deckEl.setAttribute('aria-label',
+                `Talia poziom ${tier}, ${deckCount} kart. Zarezerwuj wierzchnią kartę.`);
+            deckEl.onkeydown = (e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    deckEl.click();
+                }
+            };
+            if (deckCount > 0) {
+                deckEl.tabIndex = 0;
+                deckEl.removeAttribute('aria-disabled');
+            } else {
+                deckEl.tabIndex = -1;
+                deckEl.setAttribute('aria-disabled', 'true');
+            }
 
             const cardsContainer = document.getElementById(`tier-${tier}-cards`);
             const prevIds = Array.from(cardsContainer.querySelectorAll('.dev-card')).map(c => c.dataset.cardId);
@@ -587,6 +642,18 @@ class SplendorUI {
         const affordable = this.game.canAfford(player, card) && isCurrentPlayer;
         if (affordable) el.classList.add('affordable');
 
+        // Accessibility: describe the card for screen readers + keyboard activation
+        const costParts = GEM_COLORS
+            .filter(c => card.cost[c])
+            .map(c => `${card.cost[c]} ${GEM_NAMES[c]}`);
+        const costDesc = costParts.length ? `koszt: ${costParts.join(', ')}` : 'bez kosztu';
+        const pointsDesc = card.points > 0 ? `${card.points} pkt prestiżu` : '0 pkt';
+        el.setAttribute('role', 'button');
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-label',
+            `Karta poziom ${card.tier}, bonus ${GEM_NAMES[card.gem]}, ${pointsDesc}, ${costDesc}${affordable ? ', stać cię' : ''}`);
+        this._enableKeyActivation(el);
+
         let pointsHtml = card.points > 0 ? card.points : '';
 
         let costHtml = '';
@@ -608,9 +675,9 @@ class SplendorUI {
             </div>
             <div class="card-cost">${costHtml}</div>
             <div class="card-actions">
-                <button class="card-action-btn buy-btn" ${!affordable ? 'disabled' : ''}>💰 Kup</button>
-                ${isReserved ? `<button class="card-action-btn buy-btn-reserved" ${!affordable ? 'disabled' : ''}>💰 Kup</button>` :
-                    `<button class="card-action-btn reserve-btn" ${!this.game.canReserve(player) ? 'disabled' : ''}>📌 Zarezerwuj</button>`}
+                <button class="card-action-btn buy-btn" ${!affordable ? 'disabled' : ''}><span class="btn-icon" aria-hidden="true">💰</span> Kup</button>
+                ${isReserved ? `<button class="card-action-btn buy-btn-reserved" ${!affordable ? 'disabled' : ''}><span class="btn-icon" aria-hidden="true">💰</span> Kup</button>` :
+                    `<button class="card-action-btn reserve-btn" ${!this.game.canReserve(player) ? 'disabled' : ''}><span class="btn-icon" aria-hidden="true">📌</span> Zarezerwuj</button>`}
             </div>
         `;
 
@@ -697,7 +764,7 @@ class SplendorUI {
             if (player.reserved.length > 0) {
                 let cardsHtml = '';
                 player.reserved.forEach((card, ci) => {
-                    cardsHtml += `<div class="reserved-mini-card" data-tier="${card.tier}" data-idx="${ci}" data-player="${idx}">${GEM_SYMBOLS[card.gem]}</div>`;
+                    cardsHtml += `<div class="reserved-mini-card" data-tier="${card.tier}" data-idx="${ci}" data-player="${idx}" role="button" aria-label="Zarezerwowana karta ${GEM_NAMES[card.gem]}, poziom ${card.tier}">${GEM_SYMBOLS[card.gem]}</div>`;
                 });
                 reservedHtml = `
                     <div class="player-reserved">
@@ -733,14 +800,17 @@ class SplendorUI {
 
             container.appendChild(panel);
 
-            // Reserved card click
+            // Reserved card click (only the current player's reserved cards
+            // are interactive, so only those become keyboard-focusable)
             if (idx === this.game.currentPlayer && !this.game.gameOver) {
                 panel.querySelectorAll('.reserved-mini-card').forEach(miniCard => {
+                    miniCard.tabIndex = 0;
                     miniCard.addEventListener('click', () => {
                         const cardIdx = parseInt(miniCard.dataset.idx);
                         const card = player.reserved[cardIdx];
                         this.showReservedCardPopup(card, miniCard);
                     });
+                    this._enableKeyActivation(miniCard);
                 });
             }
         });

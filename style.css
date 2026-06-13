@@ -753,6 +753,20 @@ h1, h2, h3 {
     box-shadow: none;
 }
 
+/* --- Keyboard focus visibility (custom div-based controls + real buttons) --- */
+.bank-token:focus-visible,
+.dev-card:focus-visible,
+.deck-pile:focus-visible,
+.reserved-mini-card:focus-visible,
+button:focus-visible,
+.mode-btn:focus-visible,
+.player-btn:focus-visible,
+.diff-btn:focus-visible {
+    outline: 3px solid var(--text-accent);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
 /* --- Players Area --- */
 #players-area {
     display: grid;
@@ -1131,12 +1145,12 @@ h1, h2, h3 {
 /* --- Toast notifications --- */
 #toast-container {
     position: fixed;
-    top: 60px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 200;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: center;
     gap: 8px;
     pointer-events: none;
@@ -1186,13 +1200,13 @@ h1, h2, h3 {
 }
 
 @keyframes toastIn {
-    from { opacity: 0; transform: translateY(-20px) scale(0.8); }
+    from { opacity: 0; transform: translateY(20px) scale(0.8); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes toastOut {
     from { opacity: 1; transform: translateY(0) scale(1); }
-    to { opacity: 0; transform: translateY(-20px) scale(0.8); }
+    to { opacity: 0; transform: translateY(20px) scale(0.8); }
 }
 
 /* --- Floating particles (buy effect) --- */
@@ -1317,13 +1331,56 @@ h1, h2, h3 {
     #players-area {
         grid-template-columns: repeat(2, 1fr);
         min-width: auto;
-        max-width: none;
+        max-width: 760px;
+        width: 100%;
+        align-self: stretch;
+        margin: 0 auto;
         justify-content: center;
     }
     #players-area:has(.player-panel:nth-child(2):last-child) {
         grid-template-columns: 1fr 1fr;
+        min-width: auto;
+        max-width: 760px;
+        width: 100%;
     }
     .player-panel { min-width: 200px; flex: 1; max-width: 300px; }
+
+    /* In the stacked (column) layout the board no longer needs to be squeezed
+       into the viewport height. Let the page grow naturally and scroll, and let
+       cards size to their content width-first so the cost list is never clipped. */
+    #game-screen {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+    #game-board { justify-content: flex-start; }
+    .card-tier { max-height: none; height: auto; }
+    .card-row { height: auto; }
+    .dev-card {
+        aspect-ratio: auto;
+        flex: 1 1 0;
+        min-width: 0;
+        height: auto;
+        min-height: 130px;
+    }
+    .deck-pile {
+        aspect-ratio: auto;
+        height: auto;
+        align-self: stretch;
+        width: clamp(48px, 8vw, 70px);
+        min-width: 48px;
+        flex: 0 0 auto;
+    }
+
+    /* Player header: keep the name and score on one line without overlapping. */
+    .player-header { gap: 8px; }
+    .player-name {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .player-score { flex-shrink: 0; white-space: nowrap; font-size: 1.25rem; }
 }
 
 @media (max-width: 900px) {
@@ -1515,10 +1572,23 @@ h1, h2, h3 {
         font-size: 0.9rem;
     }
 
-    /* Card actions popup */
+    /* Card actions popup — drop the emoji and tighten so the label fits a
+       narrow card without being clipped by the card's overflow:hidden. */
+    .card-actions {
+        padding: 5px;
+        gap: 6px;
+    }
     .card-action-btn {
-        padding: 10px 14px;
-        font-size: 0.85rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 9px 4px;
+        font-size: 0.7rem;
+        letter-spacing: 0;
+        white-space: nowrap;
+    }
+    .card-action-btn .btn-icon {
+        display: none;
     }
 
     /* Players area */
@@ -1673,7 +1743,7 @@ h1, h2, h3 {
 
     /* Toast */
     #toast-container {
-        top: 10px;
+        bottom: 10px;
         left: 10px;
         right: 10px;
         transform: none;
@@ -1715,6 +1785,11 @@ h1, h2, h3 {
 
     .dev-card {
         padding: 4px;
+    }
+
+    .card-action-btn {
+        font-size: 0.64rem;
+        padding: 9px 2px;
     }
 
     .card-points {
